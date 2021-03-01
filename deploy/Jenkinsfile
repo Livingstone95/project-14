@@ -1,0 +1,33 @@
+
+pipeline {
+    agent any
+
+
+  stages {
+    stage('Build') {
+      steps {
+        script {
+          sh 'echo "Building Stage"'
+        }
+      }
+    }
+
+
+    stage('Test') {
+      steps {
+        script {
+          sh 'echo "Testing Stage"'
+        }
+      }
+    }
+    stage('Deploy'){
+      steps{
+        script{
+          sh 'pwd'
+          sh 'whoami'
+          sh 'echo ansible.cfg'
+        }
+      }
+    }
+    }
+}
