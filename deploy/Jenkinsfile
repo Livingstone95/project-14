@@ -20,7 +20,7 @@ pipeline {
         }
       }
     }
-    stage('Deploy')
+    stage('Deploy'){
       steps{
         script{
           sh 'pwd'
@@ -28,5 +28,6 @@ pipeline {
           sh 'echo ansible.cfg'
         }
       }
+    }
     }
 }
