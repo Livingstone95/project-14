@@ -1,0 +1,46 @@
+---
+# tasks file for deployment
+- name: install nginx
+  ansible.builtin.yum:
+      name: nginx
+      state: present
+
+- name: start and enable nginx
+  ansible.builtin.service:
+     name: nginx
+     state: started 
+     enabled: yes
+
+
+- name: install PHP and it dependencies
+  ansible.builtin.yum:
+    name:
+      - php 
+      - php-mysqlnd
+      - php-gd 
+      - php-curl
+      - zip
+      - wget
+    state: present
+
+
+- name: Download the artifact
+  get_url:
+    url:  
+    dest:  
+    url_username: 
+    url_password:  
+
+# - name: Login to a form based webpage, then use the returned cookie to access the app in later tasks
+#   uri:
+#     url: https://your.form.based.auth.example.com/index.php
+#     method: GET
+
+- name: unzip the artifacts
+  ansible.builtin.unarchive:
+    src:  
+    dest: 
+    remote_src: yes
+
+
+- name: deploy the application to 
