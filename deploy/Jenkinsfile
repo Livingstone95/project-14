@@ -1,33 +1,49 @@
+pipeline{
+   agent any
 
-pipeline {
-    agent any
+   environment {
+      ANSIBLE_CONFIG="${WORKSPACE}/deploy/ansible.cfg"
+    }
 
+     parameters {
+      string(name: 'inventory_file', defaultValue: '${inventory}',  description: 'selecting the environment')
+          }
+     
 
-  stages {
-    stage('Build') {
-      steps {
-        script {
-          sh 'echo "Building Stage"'
+   stages{
+
+      stage("Initial cleanup") {
+          steps {
+            dir("${WORKSPACE}") {
+              deleteDir()
+            }
+          }
+        }
+
+      stage('Checkout SCM') {
+         steps{
+            git branch: 'feature/project-14', url: 'https://github.com/Livingstone95/project-14.git'
+         }
+       }
+      stage('Prepare Ansible For Execution') {
+        steps {
+          sh 'echo ${WORKSPACE}'
+          sh 'sed -i \'s/roles_path = \\/home\\/ansadmin\\/workfolder\\/project-14\\/ansible.cfg/roles_path = \\/var\\/lib\\/jenkins\\/workspace\\/project-14_feature_developing\\/roles /g\' deploy/ansible.cfg'
+          
         }
       }
-    }
 
 
-    stage('Test') {
-      steps {
-        script {
-          sh 'echo "Testing Stage"'
+      stage('Run Ansible') {
+        steps {
+            ansiblePlaybook colorized: true, credentialsId: 'ansadmin', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventory/dev', playbook: 'playbooks/site.yml'
         }
       }
-    }
-    stage('Deploy'){
-      steps{
-        script{
-          sh 'pwd'
-          sh 'whoami'
-          sh 'echo ansible.cfg'
+
+      stage('Clean Workspace after build'){
+        steps{
+          cleanWs()
         }
       }
-    }
-    }
-}
+   }
+}  

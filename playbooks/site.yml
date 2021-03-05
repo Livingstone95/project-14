@@ -6,3 +6,7 @@
 - hosts: nginx
 - name: nginx assignment
   ansible.builtin.import_playbook: ../static-assignments/nginx.yml
+
+- hosts: todo
+- name: Deploying Application todo
+  ansible.builtin.import_playbook: ../static-assignments/todo.yml

@@ -1,0 +1,6 @@
+---
+# handlers file for deployment
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
