@@ -1,6 +1,6 @@
 ---
 # handlers file for deployment
-- name: Restart nginx
+- name: Restart httpd
   ansible.builtin.service:
-    name: nginx
+    name: httpd
     state: restarted

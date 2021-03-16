@@ -1,13 +1,13 @@
 ---
 # tasks file for deployment
-- name: install nginx
+- name: install httpd
   ansible.builtin.yum:
-      name: nginx
+      name: httpd
       state: present
 
-- name: start and enable nginx
+- name: start and enable httpd
   ansible.builtin.service:
-     name: nginx
+     name: httpd
      state: started 
      enabled: yes
 
@@ -24,23 +24,24 @@
     state: present
 
 
-- name: Download the artifact
-  get_url:
-    url:  
-    dest:  
-    url_username: 
-    url_password:  
-
-# - name: Login to a form based webpage, then use the returned cookie to access the app in later tasks
-#   uri:
-#     url: https://your.form.based.auth.example.com/index.php
-#     method: GET
+- name: Download the artifact from artifactory
+  get_url:  
+    url:  http://3.126.249.237:8082/artifactory/David/php-todo
+    dest:  /home/ec2-user/
+    url_username: admin
+    url_password: AP8Ayte6jRDe9c4YrymgceSvD2r
 
 - name: unzip the artifacts
   ansible.builtin.unarchive:
-    src:  
-    dest: 
+    src: /home/ec2-user/
+    dest: /var/www/html/ 
     remote_src: yes
 
+- name: remove httpd default page 
+  ansible.builtin.file:
+    path: /etc/sites-enabled/default
+    state: absent
+  notify:  Restart httpd
 
-- name: deploy the application to 
+
+ 
