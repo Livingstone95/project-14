@@ -43,6 +43,7 @@
       ansible.builtin.copy:
         src: /home/ec2-user/var/lib/jenkins/workspace/php-todo_main/
         dest: /var/www/html/
+        remote_src: yes
 
     - name: remove nginx default page
       ansible.builtin.file:
