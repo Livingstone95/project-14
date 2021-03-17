@@ -40,7 +40,7 @@
        remote_src: yes
 
     - name: deploy the code
-      ansible.builtin.file:
+      ansible.builtin.copy:
         src: /home/ec2-user/var/lib/jenkins/workspace/php-todo_main/
         dest: /var/www/html/
 
