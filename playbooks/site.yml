@@ -35,9 +35,14 @@
 
     - name: unzip the artifacts
       ansible.builtin.unarchive:
-       src: /home/ec2-user/var/lib/jenkins/workspace/php-todo_main/
-       dest: /var/www/html/
+       src: /home/ec2-user/php-todo
+       dest: /home/ec2-user/
        remote_src: yes
+
+    - name: deploy the code
+      ansible.builtin.file:
+        src: /home/ec2-user/var/lib/jenkins/workspace/php-todo_main/
+        dest: /var/www/html/
 
     - name: remove nginx default page
       ansible.builtin.file:
