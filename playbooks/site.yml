@@ -1,19 +1,21 @@
 ---
-- name: talk to all hosts just so we can learn about them
+- name: Deploying the PHP Applicaion to Dev Enviroment
+  become: true
   hosts: nginx
-   tasks:
-     - name: install nginx on the webserver
+
+  tasks:
+    - name: install nginx on the webserver
        ansible.builtin.yum:
          name: nginx
          state: present
 
-     - name: ensure nginx is started and enabled
-      ansible.builtin.service:
+    - name: ensure nginx is started and enabled
+       ansible.builtin.service:
         name: nginx
         state: started 
         enabled: yes
       
-      - name: install PHP
+    - name: install PHP
        ansible.builtin.yum:
           name:
             - php 
@@ -22,7 +24,7 @@
             - php-curl
           state: present
       
-       - name: Download the artifact
+    - name: Download the artifact
         get_url:
           url: http://3.124.188.189:8082/artifactory/David/php-todo
           dest: /home/ansadmin/
@@ -30,17 +32,18 @@
           url_password: AP8Ayte6jRDe9c4YrymgceSvD2r 
 
 
-        - name: unzip the artifacts
+    - name: unzip the artifacts
          ansible.builtin.unarchive:
           src: /home/ansadmin/
           dest: /var/www/html
           remote_src: yes
 
-        - name: remove nginx default page
+    - name: remove nginx default page
           ansible.builtin.file:
             path: /etc/httpd/conf.d/welcome.conf
             state: absent
-        - name: restart nginx
+
+    - name: restart nginx
           ansible.builtin.service:
           name: nginx
           state: restarted
