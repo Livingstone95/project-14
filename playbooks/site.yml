@@ -35,7 +35,7 @@
 
     - name: unzip the artifacts
       ansible.builtin.unarchive:
-        src: /home/ansadmin/
+        src: /home/ansadmin/php-todo
         dest: /var/www/html
         remote_src: yes
 
