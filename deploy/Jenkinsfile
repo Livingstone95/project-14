@@ -27,9 +27,7 @@ pipeline{
        }
       stage('Prepare Ansible For Execution') {
         steps {
-          sh 'echo ${WORKSPACE}'
-          sh 'sed -i \"s/roles_path = \\/home\\/ansadmin\\/workfolder\\/project-14\\/ansible.cfg/roles_path = \\/var\\/lib\\/jenkins\\/workspace\\/project-14_main\\/roles/g\" deploy/ansible.cfg
-          
+          sh 'echo ${WORKSPACE}'          
         }
       }
 
