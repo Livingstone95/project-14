@@ -22,6 +22,7 @@
           - php-mysqlnd
           - php-gd 
           - php-curl
+          - unzip
         state: present
       
     - name: Download the artifact
