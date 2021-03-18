@@ -6,12 +6,12 @@
   tasks:
     - name: install nginx on the webserver
       ansible.builtin.yum:
-        name: nginx
+        name: httpd
         state: present
 
     - name: ensure nginx is started and enabled
       ansible.builtin.service:
-        name: nginx
+        name: httpd
         state: started 
         enabled: yes
       
@@ -43,6 +43,7 @@
       ansible.builtin.copy:
         src: /home/ec2-user/var/lib/jenkins/workspace/php-todo_main/
         dest: /var/www/html/
+        force: yes
         remote_src: yes
 
     - name: remove nginx default page
