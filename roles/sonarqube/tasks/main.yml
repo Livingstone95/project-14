@@ -1,0 +1,27 @@
+---
+# tasks file for sonarqube
+- name: install java 11
+  ansible.builtin.yum:
+    name: java-11-openjdk-devel
+    state: present
+
+- import_tasks: postgresql.yml
+
+- name: create password for user postgres
+  ansible.builtin.user:
+    name: postgres
+    comment: postgres user
+    uid: 1040
+    group: postgres
+    password: postgres
+
+- import_tasks: sonarqube-setup.yml
+
+- name: start and enable sonarqube
+  ansible.builtin.service:
+    name: sonarqube
+    state: started
+    enabled: yes
+
+
+- import_tasks: configure-firewall.yml

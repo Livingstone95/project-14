@@ -1,0 +1,42 @@
+- name: install postgresql
+  ansible.builtin.yum:
+    enablerepo: postgresql:12
+    name: postgresql-server
+    state: present
+
+# - name: initilaze postgresql
+#   command: postgresql-setup --initdb
+
+- name: start and enable postgresql
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: yes
+     
+- name: update posstgres.conf
+  ansible.builtin.template:
+    src: templates/pg_hba.conf.j2
+    dest: /var/lib/pgsql/data/pg_hba.conf 
+  notify: Restart postgresql
+
+
+- name: Create a new database sonarqubedb
+  become_user: postgres
+  community.general.postgresql_db:
+    name: sonarqubedb
+    encoding: UTF-8
+    lc_collate: de_DE.UTF-8
+    lc_ctype: de_DE.UTF-8
+
+- name: Create user sonarqube
+  community.general.postgresql_user:
+    db: sonarqubedb
+    name: sonarqube
+    password: sonarqube
+    priv: "ALL"
+     
+- name: update posstgres.conf
+  ansible.builtin.template:
+    src: templates/pg_hba.conf.j2
+    dest: /var/lib/pgsql/data/pg_hba.conf 
+  notify: Restart postgresql

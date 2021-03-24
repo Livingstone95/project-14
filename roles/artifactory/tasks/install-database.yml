@@ -1,0 +1,38 @@
+
+- name: install mysql 
+  ansible.builtin.apt:
+    name: mysql-server
+    state: present
+
+- name: ensure mysql is started and enabled
+  ansible.builtin.service:
+     name: mysql
+     state: started 
+     enabled: yes
+
+- name: create /var/lib/mysql/mysql.sock
+  ansible.builtin.file:
+    path: /var/lib/mysql/mysql.sock
+    state: touch
+
+- name: create database
+  community.mysql.mysql_db:
+    name: artifactorydb
+    collation: utf8_general_ci
+    encoding: utf8
+    state: present
+
+- name: create user
+  community.mysql.mysql_user:
+    name: artifactory
+    host: '0.0.0.0'
+    password: artifactory
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+
+- name: update /ect/my.cf for bind-address
+  ansible.builtin.template:
+    src: templates/my.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+  notify: Restart mysql

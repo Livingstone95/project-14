@@ -1,0 +1,36 @@
+
+- name: create sonnarqube directory
+  ansible.builtin.file:
+    path: /opt/sonarqube
+    state: directory
+    mode: '0755'
+    owner: ansadmin
+    group: ansadmin
+
+- name: download the zip file
+  ansible.builtin.get_url:
+    url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.5.zip
+    dest: /opt/sonarqube/
+    mode: 0755
+
+- name: Extract the zip file
+  ansible.builtin.unarchive:
+    src: /opt/sonarqube/sonarqube-7.5.zip
+    dest: /opt/sonarqube/
+
+- name: remove the zip file
+  ansible.builtin.file:
+    path: /opt/sonarqube/sonarqube-7.5.zip
+    state: absent
+   
+    
+- name: Configuring the SonarQube Server
+  ansible.builtin.template:
+    src: templates/sonar.properties.j2
+    dest: /opt/sonarqube/sonarqube-7.5/conf/sonar.properties
+    force: yes
+
+- name: create a service file
+  ansible.builtin.template:
+    src: templates/sonarqube.service.j2
+    dest:  /etc/systemd/system/sonarqube.service

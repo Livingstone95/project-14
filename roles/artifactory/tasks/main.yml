@@ -1,0 +1,44 @@
+---
+# tasks file for artifactory
+
+- name: install java 11
+  ansible.builtin.yum:
+    name: java-11-openjdk-devel
+    state: present
+
+- name: set up java enviroment variable
+  command: echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-1.el7_6.x86_64" >> /etc/profile
+
+- name: reload the /etc/profile
+  shell: . /etc/profile
+
+
+- name: add the repository key to repos list
+  ansible.builtin.get_url:
+    url:  https://releases.jfrog.io/artifactory/artifactory-rpms/artifactory-rpms.repo 
+    dest: /etc/yum.repos.d/jfrog-artifactory-rpms.repo
+    mode: '0755'
+ 
+- name: install artifactory
+  ansible.builtin.yum:
+    name: jfrog-artifactory-oss
+    state: present
+
+- name: set up enviromanet variables
+  command: echo "export ARTIFACTORY_HOME=/opt/jfrog/artifactory" >> /etc/profile
+
+- name: reload the /etc/profile
+  shell: . /etc/profile
+
+- name: start and enable artifactory
+  ansible.builtin.service:
+    name: artifactory
+    state: started
+    enabled: yes
+
+- import_tasks: install-database.yml
+
+
+# - import_tasks: setup-artifactory-database.yml
+
+- import_tasks: configure-firewall.yml

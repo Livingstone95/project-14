@@ -1,0 +1,32 @@
+- name: install firewalld
+  ansible.builtin.yum:
+     name: firewalld
+     state: latest
+
+- name: ensure httpd firewalld is enabled
+  ansible.builtin.service:
+     name: firewalld
+     state: started 
+     enabled: yes
+
+- name: Allow port 8081
+  ansible.posix.firewalld:
+    state: enabled
+    port: 9000/tcp
+    permanent: yes
+
+- name: permit traffic in public zone for https service
+  ansible.posix.firewalld:
+    zone: public
+    service: https
+    permanent: yes
+    state: enabled   
+
+
+- name: permit traffic in public zone for http service
+  ansible.posix.firewalld:
+    zone: public
+    service: http
+    permanent: yes
+    state: enabled   
+  notify: Restart firewalld

@@ -29,12 +29,12 @@ pipeline{
         steps {
           sh 'echo ${WORKSPACE}'          
         }
-      }
+     }
 
 
       stage('Run Ansible') {
         steps {
-            ansiblePlaybook colorized: true, credentialsId: 'bastion', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventory/dev', playbook: 'playbooks/site.yml'
+            ansiblePlaybook colorized: true, credentialsId: 'bastion', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventory/${params.inventory_file}', playbook: 'playbooks/site.yml'
         }
       }
 

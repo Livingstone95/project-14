@@ -1,0 +1,11 @@
+---
+# handlers file for artifactory
+- name: Restart firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: restarted
+
+- name: Restart mysql
+  ansible.builtin.service:
+    name: mysqld
+    state: restarted
