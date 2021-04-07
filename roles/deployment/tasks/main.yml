@@ -1,2 +1,60 @@
 ---
 # tasks file for roles
+ - name: install httpd on the webserver
+   ansible.builtin.yum:
+      name: httpd
+      state: present
+
+- name: ensure httpd is started and enabled
+  ansible.builtin.service:
+    name: httpd
+    state: started 
+    enabled: yes
+      
+- name: install PHP
+  ansible.builtin.yum:
+    name:
+     - php 
+     - php-mysqlnd
+     - php-gd 
+     - php-curl
+     - unzip
+     - php-fpm
+    state: present
+
+- name: ensure httpd is started and enabled
+  ansible.builtin.service:
+    name: php-fpm
+    state: started 
+    enabled: yes
+      
+- name: Download the artifact
+  get_url:
+    url: http://3.124.188.189:8082/artifactory/David/php-todo
+    dest: /home/ec2-user/
+    url_username: admin
+    url_password: AP8Ayte6jRDe9c4YrymgceSvD2r 
+
+
+- name: unzip the artifacts
+  ansible.builtin.unarchive:
+    src: /home/ec2-user/php-todo
+    dest: /home/ec2-user/
+    remote_src: yes
+
+- name: deploy the code
+  ansible.builtin.copy:
+    src: /home/ec2-user/var/lib/jenkins/workspace/php-todo_main/
+    dest: /var/www/html/
+    force: yes
+    remote_src: yes
+
+- name: remove nginx default page
+  ansible.builtin.file:
+    path: /etc/httpd/conf.d/welcome.conf
+    state: absent
+
+- name: restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
